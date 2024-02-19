@@ -1,5 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -15,15 +16,10 @@ function Index() {
   // handle file drop
   const handleOnDrop = (e: React.DragEvent<HTMLInputElement>) => {
     e.preventDefault();
-    // if (e.dataTransfer.items.length > 1) {
-    //   toast.error("Only one file is allowed");
-    //   return;
-    // } else if (
-    //   !acceptedFileTypes.includes(e.dataTransfer.files[0].name.split(".").pop())
-    // ) {
-    //   toast.error("File type not supported");
-    //   return;
-    // }
+    if (e.dataTransfer.items.length > 1) {
+      toast.error("Only one file is allowed");
+      return;
+    }
     if (e.dataTransfer.items) {
       for (let i = 0; i < e.dataTransfer.items.length; i++) {
         if (e.dataTransfer.items[i].kind === "file") {
@@ -59,6 +55,7 @@ function Index() {
             {file ? (
               <>
                 <p>{file.name}</p>
+                <audio controls src={URL.createObjectURL(file)} />
                 <button onClick={() => setFile(null)}>Remove</button>
               </>
             ) : (
